@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CopyPasteSaver</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CopyPasteSaver</h1>
+      <p class="subtitle">Save, tag, search and copy text snippets — lightning fast.</p>
+    </header>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flashes">
+          {% for cat, msg in messages %}
+            <div class="flash {{ cat }}">{{ msg }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <section class="card">
+      <form method="POST" action="/add" class="form-add">
+        <textarea name="content" placeholder="Paste or type something..." required></textarea>
+        <div class="form-row">
+          <input type="text" name="tag" placeholder="Tag (optional)">
+          <button type="submit" class="btn save">Save Snippet</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="search">
+      <form method="GET" action="/" class="form-search">
+        <input type="text" name="q" value="{{ q }}" placeholder="Search snippets or tags...">
+        <button type="submit" class="btn clear">Search</button>
+      </form>
+    </section>
+
+    <section class="list">
+      {% for id, content, tag in snippets %}
+        <div class="snippet">
+          <div class="snippet-left">
+            <div class="content">{{ content }}</div>
+            {% if tag %}<div class="tag">#{{ tag }}</div>{% endif %}
+          </div>
+          <div class="snippet-actions">
+            <button class="btn copy" data-content="{{ content|e }}">Copy</button>
+            <form method="POST" action="/delete/{{ id }}" onsubmit="return confirm('Delete this snippet?');" style="display:inline;">
+              <button type="submit" class="btn delete">Delete</button>
+            </form>
+          </div>
+        </div>
+      {% else %}
+        <p class="empty">No snippets yet. Add one!</p>
+      {% endfor %}
+    </section>
+
+    <footer class="backend">Backend: <strong>Flask / SQLite</strong></footer>
+    <p class="footer">made with ❤️ by <b>Juben Mehta</b></p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
