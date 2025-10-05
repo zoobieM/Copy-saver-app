@@ -34,3 +34,35 @@ function fallbackCopy(text, btn){
     document.body.removeChild(ta);
   }
 }
+
+// Edit functionality
+document.addEventListener('click', function(e){
+  // Handle Edit button click
+  const editBtn = e.target.closest('.btn.edit-btn');
+  if(editBtn){
+    const id = editBtn.getAttribute('data-id');
+    const contentDiv = document.getElementById(`content-${id}`);
+    const editForm = document.getElementById(`edit-form-${id}`);
+    
+    if(contentDiv && editForm){
+      contentDiv.style.display = 'none';
+      editForm.style.display = 'block';
+      editForm.querySelector('textarea').focus();
+    }
+    return;
+  }
+  
+  // Handle Cancel button click
+  const cancelBtn = e.target.closest('.cancel-edit');
+  if(cancelBtn){
+    const id = cancelBtn.getAttribute('data-id');
+    const contentDiv = document.getElementById(`content-${id}`);
+    const editForm = document.getElementById(`edit-form-${id}`);
+    
+    if(contentDiv && editForm){
+      contentDiv.style.display = 'block';
+      editForm.style.display = 'none';
+    }
+    return;
+  }
+});

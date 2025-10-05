@@ -62,6 +62,7 @@ input[type="text"]{
 .btn.clear{ background:#6b7280; color:#fff; }
 .btn.delete{ background:var(--danger); color:#fff; }
 .btn.copy{ background:#10b981; color:#fff; margin-right:8px; }
+.btn.edit-btn{ background:#f59e0b; color:#fff; margin-right:8px; }
 
 .search{ margin:8px 0 16px 0; }
 .form-search{ display:flex; gap:10px; }
@@ -78,8 +79,42 @@ input[type="text"]{
 }
 .content{ white-space:pre-wrap; font-family:inherit; }
 .tag{ color:var(--muted); font-size:13px; margin-top:6px; }
+
+.snippet-meta {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 8px;
+  font-size: 0.85em;
+  flex-wrap: wrap;
+}
+
+.timestamp {
+  color: #888;
+  font-size: 0.88em;
+}
+
+.timestamp-edited {
+  color: #ffa500;
+  font-size: 0.88em;
+  font-style: italic;
+}
+
 .snippet-actions{ display:flex; align-items:center; gap:6px; }
 .empty{ color:var(--muted); }
+
+.edit-form{ margin-top:12px; }
+.edit-textarea{ 
+  width:100%; 
+  min-height:80px; 
+  padding:10px; 
+  border-radius:8px; 
+  border:1px solid #e5e7eb; 
+  font-size:14px; 
+  resize:vertical; 
+  font-family:inherit;
+}
+.cancel-edit{ background:#94a3b8; }
 
 .backend{ color:var(--muted); margin-top:18px; font-size:13px; }
 .flashes{ margin-bottom:12px; }
@@ -87,3 +122,19 @@ input[type="text"]{
 .flash.success{ background:#ecfdf5; color:#065f46; border:1px solid rgba(16,185,129,0.12); }
 .flash.warning{ background:#fff7ed; color:#92400e; border:1px solid rgba(245,158,11,0.08); }
 .flash.info{ background:#eef2ff; color:#1e3a8a; border:1px solid rgba(37,99,235,0.08); }
+
+/* Auth pages */
+.user-nav{ display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; padding:12px; background:var(--card); border-radius:8px; }
+.user-info{ color:var(--muted); }
+.btn.login{ background:var(--primary); color:#fff; }
+.btn.signup{ background:#10b981; color:#fff; margin-left:8px; }
+.btn.logout{ background:#ef4444; color:#fff; }
+.auth-card{ max-width:400px; margin:0 auto; }
+.form-group{ margin-bottom:16px; }
+.form-group label{ display:block; margin-bottom:6px; font-weight:600; color:#374151; }
+.form-group input{ width:100%; padding:10px; border-radius:8px; border:1px solid #e5e7eb; font-size:14px; }
+.full-width{ width:100%; }
+.auth-link{ text-align:center; margin-top:16px; color:var(--muted); }
+.auth-link a{ color:var(--primary); text-decoration:none; font-weight:600; }
+.login-prompt{ text-align:center; padding:40px 20px; }
+.login-prompt a{ color:var(--primary); text-decoration:none; font-weight:600; }

@@ -8,11 +8,26 @@
 </head>
 <body>
   <div class="container">
+    <!-- Header -->
     <header>
       <h1>CopyPasteSaver</h1>
       <p class="subtitle">Save, tag, search and copy text snippets — lightning fast.</p>
     </header>
 
+    <!-- User Navigation -->
+    <nav class="user-nav">
+      {% if current_user.is_authenticated %}
+        <div class="user-info">
+          👋 Welcome, <b>{{ current_user.username }}</b>
+        </div>
+        <a href="{{ url_for('logout') }}" class="btn logout">Logout</a>
+      {% else %}
+        <a href="{{ url_for('login') }}" class="btn login">Login</a>
+        <a href="{{ url_for('signup') }}" class="btn signup">Sign Up</a>
+      {% endif %}
+    </nav>
+
+    <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div class="flashes">
@@ -23,42 +38,72 @@
       {% endif %}
     {% endwith %}
 
-    <section class="card">
-      <form method="POST" action="/add" class="form-add">
-        <textarea name="content" placeholder="Paste or type something..." required></textarea>
-        <div class="form-row">
-          <input type="text" name="tag" placeholder="Tag (optional)">
-          <button type="submit" class="btn save">Save Snippet</button>
-        </div>
-      </form>
-    </section>
-
-    <section class="search">
-      <form method="GET" action="/" class="form-search">
-        <input type="text" name="q" value="{{ q }}" placeholder="Search snippets or tags...">
-        <button type="submit" class="btn clear">Search</button>
-      </form>
-    </section>
-
-    <section class="list">
-      {% for id, content, tag in snippets %}
-        <div class="snippet">
-          <div class="snippet-left">
-            <div class="content">{{ content }}</div>
-            {% if tag %}<div class="tag">#{{ tag }}</div>{% endif %}
+    <!-- Main App Area -->
+    {% if current_user.is_authenticated %}
+      <!-- Add Snippet Section -->
+      <section class="card">
+        <form method="POST" action="/add" class="form-add">
+          <textarea name="content" placeholder="Paste or type something..." required></textarea>
+          <div class="form-row">
+            <input type="text" name="tag" placeholder="Tag (optional)">
+            <button type="submit" class="btn save">Save Snippet</button>
           </div>
-          <div class="snippet-actions">
-            <button class="btn copy" data-content="{{ content|e }}">Copy</button>
-            <form method="POST" action="/delete/{{ id }}" onsubmit="return confirm('Delete this snippet?');" style="display:inline;">
-              <button type="submit" class="btn delete">Delete</button>
-            </form>
-          </div>
-        </div>
-      {% else %}
-        <p class="empty">No snippets yet. Add one!</p>
-      {% endfor %}
-    </section>
+        </form>
+      </section>
 
+      <!-- Search Section -->
+      <section class="search">
+        <form method="GET" action="/" class="form-search">
+          <input type="text" name="q" value="{{ q }}" placeholder="Search snippets or tags...">
+          <button type="submit" class="btn clear">Search</button>
+        </form>
+      </section>
+
+      <!-- Snippet List Section -->
+      <section class="list">
+        {% for id, content, tag, created_at, last_edited in snippets %}
+          <div class="snippet" id="snippet-{{ id }}">
+            <div class="snippet-left">
+              <div class="content" id="content-{{ id }}">{{ content }}</div>
+              <form method="POST" action="/edit/{{ id }}" class="edit-form" id="edit-form-{{ id }}" style="display:none;">
+                <textarea name="content" class="edit-textarea">{{ content }}</textarea>
+                <div class="form-row">
+                  <input type="text" name="tag" value="{{ tag or '' }}" placeholder="Tag (optional)">
+                  <button type="submit" class="btn save">Save</button>
+                  <button type="button" class="btn clear cancel-edit" data-id="{{ id }}">Cancel</button>
+                </div>
+              </form>
+              <div class="snippet-meta">
+                {% if tag %}<span class="tag">#{{ tag }}</span>{% endif %}
+                <span class="timestamp">📅{{ created_at|format_timestamp }}</span>
+                {% if created_at != last_edited %}
+                  <span class="timestamp-edited">✏️ edited {{ last_edited|format_timestamp }}</span>
+                {% endif %}
+              </div>
+            </div>
+            <div class="snippet-actions">
+              <button class="btn edit-btn" data-id="{{ id }}">Edit</button>
+              <button class="btn copy" data-content="{{ content|e }}">Copy</button>
+              <form method="POST" action="/delete/{{ id }}" onsubmit="return confirm('Delete this snippet?');" style="display:inline;">
+                <button type="submit" class="btn delete">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% else %}
+          <p class="empty">No snippets yet. Add one!</p>
+        {% endfor %}
+      </section>
+    {% else %}
+      <!-- Shown only to guests -->
+      <section class="login-prompt">
+        <p class="empty">
+          Please <a href="{{ url_for('login') }}">log in</a> or 
+          <a href="{{ url_for('signup') }}">create an account</a> to save your snippets.
+        </p>
+      </section>
+    {% endif %}
+
+    <!-- Footer -->
     <footer class="backend">Backend: <strong>Flask / SQLite</strong></footer>
     <p class="footer">made with ❤️ by <b>Juben Mehta</b></p>
   </div>
