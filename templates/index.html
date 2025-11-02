@@ -7,6 +7,18 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-overlay" id="deleteModal" style="display:none;">
+    <div class="modal-content">
+      <h3>Delete Snippet?</h3>
+      <p>Are you sure you want to delete this snippet? This action cannot be undone.</p>
+      <div class="modal-actions">
+        <button class="btn clear" onclick="closeDeleteModal()">Cancel</button>
+        <button class="btn delete" onclick="confirmDelete()">Delete</button>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Header -->
     <header>
@@ -84,7 +96,7 @@
             <div class="snippet-actions">
               <button class="btn edit-btn" data-id="{{ id }}">Edit</button>
               <button class="btn copy" data-content="{{ content|e }}">Copy</button>
-              <form method="POST" action="/delete/{{ id }}" onsubmit="return confirm('Delete this snippet?');" style="display:inline;">
+              <form method="POST" action="/delete/{{ id }}" style="display:inline;">
                 <button type="submit" class="btn delete">Delete</button>
               </form>
             </div>
