@@ -1,10 +1,17 @@
-// copy-to-clipboard for CopyPasteSaver
+// CopyPasteSaver - JavaScript functionality
+// Copy to clipboard, edit snippets, delete modal
+
+let deleteFormToSubmit = null;
+
+// ========== Copy to Clipboard ==========
 document.addEventListener('click', function(e){
   const btn = e.target.closest('.btn.copy');
   if(!btn) return;
+  
   const text = btn.getAttribute('data-content') || '';
   if(!text) return;
-  // Use navigator clipboard if available
+  
+  // Use modern clipboard API if available
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(()=>{
       btn.textContent = 'Copied ✓';
@@ -17,6 +24,7 @@ document.addEventListener('click', function(e){
   }
 });
 
+// Fallback copy method for older browsers
 function fallbackCopy(text, btn){
   const ta = document.createElement('textarea');
   ta.value = text;
@@ -35,14 +43,14 @@ function fallbackCopy(text, btn){
   }
 }
 
-// Edit functionality
+// ========== Edit Functionality ==========
 document.addEventListener('click', function(e){
   // Handle Edit button click
   const editBtn = e.target.closest('.btn.edit-btn');
   if(editBtn){
     const id = editBtn.getAttribute('data-id');
-    const contentDiv = document.getElementById(`content-${id}`);
-    const editForm = document.getElementById(`edit-form-${id}`);
+    const contentDiv = document.getElementById('content-' + id);
+    const editForm = document.getElementById('edit-form-' + id);
     
     if(contentDiv && editForm){
       contentDiv.style.display = 'none';
@@ -56,8 +64,8 @@ document.addEventListener('click', function(e){
   const cancelBtn = e.target.closest('.cancel-edit');
   if(cancelBtn){
     const id = cancelBtn.getAttribute('data-id');
-    const contentDiv = document.getElementById(`content-${id}`);
-    const editForm = document.getElementById(`edit-form-${id}`);
+    const contentDiv = document.getElementById('content-' + id);
+    const editForm = document.getElementById('edit-form-' + id);
     
     if(contentDiv && editForm){
       contentDiv.style.display = 'block';
@@ -66,3 +74,53 @@ document.addEventListener('click', function(e){
     return;
   }
 });
+
+// ========== Delete Modal ==========
+// Wait for DOM to be ready
+document.addEventListener('DOMContentLoaded', function(){
+  // Handle delete button clicks
+  document.addEventListener('click', function(e){
+    const deleteBtn = e.target.closest('.btn.delete');
+    if(deleteBtn && deleteBtn.closest('form')){
+      e.preventDefault();
+      deleteFormToSubmit = deleteBtn.closest('form');
+      const modal = document.getElementById('deleteModal');
+      if(modal){
+        modal.style.display = 'flex';
+      }
+    }
+  });
+
+  // Close modal on overlay click
+  const modal = document.getElementById('deleteModal');
+  if(modal){
+    modal.addEventListener('click', function(e){
+      if(e.target === this){
+        closeDeleteModal();
+      }
+    });
+  }
+
+  // Close modal on ESC key
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      closeDeleteModal();
+    }
+  });
+});
+
+// Make these functions global so they can be called from HTML onclick
+window.closeDeleteModal = function(){
+  const modal = document.getElementById('deleteModal');
+  if(modal){
+    modal.style.display = 'none';
+  }
+  deleteFormToSubmit = null;
+};
+
+window.confirmDelete = function(){
+  if(deleteFormToSubmit){
+    deleteFormToSubmit.submit();
+  }
+  closeDeleteModal();
+};
