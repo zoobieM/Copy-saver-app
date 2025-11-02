@@ -65,16 +65,13 @@ body::before {
   50% { opacity: 0.8; transform: scale(1.1); }
 }
 
-.container {
-  position: relative;
-  z-index: 1;
-}
-
 /* ========== Container ========== */
 .container {
   max-width: 850px;
   width: 100%;
   animation: fadeIn 0.5s ease-in;
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes fadeIn {
@@ -515,6 +512,71 @@ textarea {
 .footer b {
   color: white;
   font-weight: 600;
+}
+
+/* ========== Delete Modal ========== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content {
+  background: white;
+  padding: 32px;
+  border-radius: 16px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+  max-width: 450px;
+  width: 90%;
+  animation: modalPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+  text-align: center;
+}
+
+@keyframes modalPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content h3 {
+  margin: 0 0 16px 0;
+  color: var(--text-primary);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.modal-content p {
+  margin: 0 0 28px 0;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-actions .btn {
+  min-width: 120px;
+  padding: 12px 24px;
+  font-size: 1rem;
 }
 
 /* ========== Responsive Design ========== */
